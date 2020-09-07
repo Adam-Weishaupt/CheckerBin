@@ -1,0 +1,47 @@
+#Checker feito por AdamWeishaupt
+#Twitter: @AdamWeishaup7 
+#É necessário ter as bibliotecas requests, json e colorama instaladas.
+#Python3+
+
+import requests
+import json
+import colorama
+from colorama import Fore, Style
+colorama.init()
+
+print (Fore.RED + "--------------------------------")
+print ("         Checker de BIN"         )
+print ("--------------------------------" + Style.RESET_ALL)
+print()
+
+def main():
+    
+    bin_input = input("Digite uma BIN para fazer a consulta: ")
+    if len(bin_input) !=6:
+        print (Fore.RED + "Digite apenas seis números. Ex: 400197" + Style.RESET_ALL)
+        exit()
+
+    request = requests.get ("https://lookup.binlist.net/{}".format(bin_input))
+
+    address_data = request.json()
+    if "erro" not in address_data:
+        print()
+        print(Fore.GREEN + "BIN VÁLIDA")
+        print ("Cartão: {}".format(address_data['scheme']))
+        print ("Tipo: {}".format(address_data['type']))
+        print ("Classe: {}".format(address_data['brand']))
+        print ("País: {}".format(address_data['country']['name']))
+        print ("Banco: {}".format(address_data['bank']['name'])+ Style.RESET_ALL)
+        print()
+
+    pergunta =  (input("Deseja testar uma nova BIN ? (Sim ou Nao): ")).upper()
+    if pergunta !="SIM" and pergunta !="NAO".upper():
+        print (Fore.RED + "Digite apenas Sim ou Nao." + Style.RESET_ALL)
+        exit()
+    if pergunta == "SIM":
+        print()
+        main()
+    else:
+        print (Fore.RED + "Checker encerrado." + Style.RESET_ALL)
+if __name__ == "__main__":
+    main()
